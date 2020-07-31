@@ -1,3 +1,10 @@
+<?php
+
+if( !defined( 'ABSPATH' ) )
+	die( 'not permitted' );
+
+?>
+
 <input 
 	type="password" 
 	id="<?php esc_attr_e( $args['label_for'] ); ?>"

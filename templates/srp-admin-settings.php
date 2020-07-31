@@ -11,8 +11,8 @@ if( !defined( 'ABSPATH' ) )
         settings_fields( 'spotify-recently-played' );
 
         do_settings_sections( 'spotify-recently-played' );
-
-        submit_button('Save Settings');
 	?>
+
+    <?php submit_button('Save Settings'); ?>
 
 </form>
