@@ -66,7 +66,13 @@
 					}
 
 					let json_response = JSON.parse( response.data );
+
+					if( null == json_response.current_track && null == json_response.recent_tracks && $container.is( ':visible' ) ) {
+						$container.hide();
+					}
+
 					render_currently_playing( json_response.current_track );
+					render_recently_played( json_response.recent_tracks );
 
 				}
 			)
@@ -120,6 +126,8 @@
 		if( last_track_id == current_track.item.id )
 			return;
 
+		let track_html = get_track_html( current_track.item );
+
 		$track_container.fadeOut( 400, function() {
 			
 			$track_container.html( track_html );
@@ -142,11 +150,81 @@
 
 		});
 
-		let track_html = get_track_html( current_track.item );
+	}
+
+	function render_recently_played( recent_tracks ) {
+		
+		let $recent_track_container = $widget.find( '.recently-played' );
+		let $track_list = $recent_track_container.find( '.track-list' );
+
+		if( null == recent_tracks ) {
+			$recent_track_container.fadeOut( 400, function() {
+				$track_list.html( '' );
+				reposition_container();
+			});
+
+			return;
+		}
+
+		let last_track_id = $recent_track_container.find( '.track-id' ).first().val();
+
+		let list_items = [];
+
+		recent_tracks.items.forEach( function( item, index ) {
+
+			let track_html = get_track_html( item.track, item.played_at );
+			let list_item = $.parseHTML( `<li class="track"></li>` );
+
+			$( list_item ).html( track_html );
+			list_items.push( list_item );
+
+		});
+
+		// Update track time, without fade
+		if( last_track_id == recent_tracks.items[0].track.id ) {
+			
+			$track_list.html('');
+
+			for( let i = 0; i < list_items.length; i++ ) {
+				$track_list.append( list_items[i] );
+			}
+
+		} else {
+
+			$track_list.fadeOut( 400, function() {
+
+				$track_list.html('');
+
+				for( let i = 0; i < list_items.length; i++ ) {
+					$track_list.append( list_items[i] );
+				}
+
+				$track_list.show();
+				reposition_container();
+				$track_list.hide();
+
+				$track_list.fadeIn( 400, function() {
+
+					if( !$recent_track_container.is( ':visible' ) ) {
+
+						$recent_track_container.show();
+						reposition_container();
+						$recent_track_container.hide();
+
+						$recent_track_container.fadeIn();
+
+					}
+					
+				});
+
+
+			});
+
+		}
 
 	}
 
-	function get_track_html( track_data ) {
+	function get_track_html( track_data, played_at ) {
 		
 		let track_html = `
 			<input type="hidden" class="track-id" value="${ track_data.id }" />
@@ -162,14 +240,52 @@
 			</div>
 		`;
 
-		if( typeof track_data.played_at !== 'undefined' ) {
+		if( typeof played_at !== 'undefined' ) {
 
-			track_html += `
-			<div class="played-at">${ track_data.played_at }</div>
-			`;
+			let now = new Date();
+			let played_at_date = new Date( played_at );
+			let diff = get_time_diff( now, played_at_date );
+
+			for( let prop in diff ) {
+
+				if( 0 == diff[prop] )
+					continue;
+
+				track_html += `
+					<div class="played-at">${ diff[prop] } ${ prop } ago</div>
+				`;
+
+				break;
+
+			}
+
 		}
 
 		return $.parseHTML( track_html );
+
+	}
+
+	function get_time_diff( date1, date2 ) {
+
+	    var difference = date1.getTime() - date2.getTime();
+
+	    var daysDifference = Math.floor(difference/1000/60/60/24);
+	    difference -= daysDifference*1000*60*60*24
+
+	    var hoursDifference = Math.floor(difference/1000/60/60);
+	    difference -= hoursDifference*1000*60*60
+
+	    var minutesDifference = Math.floor(difference/1000/60);
+	    difference -= minutesDifference*1000*60
+
+	    var secondsDifference = Math.floor(difference/1000);
+
+		return {
+			days: daysDifference,
+			hours: hoursDifference,
+			minutes: minutesDifference,
+			seconds: secondsDifference
+		}
 
 	}
 

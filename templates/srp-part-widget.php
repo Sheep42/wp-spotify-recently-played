@@ -19,7 +19,7 @@ if( !defined( 'ABSPATH' ) )
 			</div>
 		</div><!-- ./current-track -->
 
-		<div class="recently-playe">
+		<div class="recently-played">
 			<h4>Recently Played</h4>
 
 			<ul class="track-list">

@@ -342,7 +342,9 @@ class DS_SpotifyRecentlyPlayed {
         }
 
         $response['current_track'] = $this->client->getMyCurrentTrack();
-        $response['recent_tracks'] = $this->client->getMyRecentTracks( $this->settings['srp_track_limit'] );
+        $response['recent_tracks'] = $this->client->getMyRecentTracks( array( 
+            'limit' => $this->settings['srp_track_limit'] 
+        ) );
 
         wp_send_json_success( wp_json_encode( $response ) );
 
