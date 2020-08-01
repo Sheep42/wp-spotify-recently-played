@@ -45,20 +45,33 @@ class DS_SpotifyRecentlyPlayed {
 
         $this->settings = ( get_option('srp_options') ) ? get_option( 'srp_options' ) : array();
 
-        if( $this->has_client_id_and_secret() && empty( $this->settings['srp_access_token'] ) ) {
-         
-            $this->session = new Session(
-                $this->settings['srp_client_id'],
-                $this->settings['srp_client_secret'],
-                admin_url( '/' ) . 'admin.php?page=spotify-recently-played'
-            );
-        
-        }
+        $this->session = new Session(
+            $this->settings['srp_client_id'],
+            $this->settings['srp_client_secret'],
+            admin_url( '/' ) . 'admin.php?page=spotify-recently-played'
+        );
+
 
         if( !empty( $this->settings['srp_access_token'] ) ) {
+    
+            $this->session->setAccessToken( $this->settings['srp_access_token'] );
+            $this->session->setRefreshToken( $this->settings['srp_refresh_token'] );
 
-            $this->client = new SpotifyWebAPI();
-            $this->client->setAccessToken( $this->settings['srp_access_token'] );
+            $options = [
+                'auto_refresh' => true,
+            ];
+
+            $this->client = new SpotifyWebAPI( $options, $this->session );
+            $this->client->setSession( $this->session );
+
+            if( $this->session->getAccessToken() !== $this->settings['srp_access_token'] ) {
+
+                $this->settings['srp_access_token'] = $this->session->getAccessToken();
+                $this->settings['srp_refresh_token'] = $this->session->getRefreshToken();
+
+                update_option( 'srp_options', $this->settings );
+
+            }
 
         }
 
