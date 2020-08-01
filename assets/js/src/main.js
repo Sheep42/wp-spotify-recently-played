@@ -253,8 +253,6 @@
 
 				let label = diff[prop] > 1 ? prop : prop.substring( 0, prop.length - 1 );
 
-				console.log( label );
-
 				track_html += `
 					<div class="played-at">${ diff[prop] } ${ label } ago</div>
 				`;
