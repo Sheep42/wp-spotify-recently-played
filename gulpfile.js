@@ -108,7 +108,7 @@ function styles() {
     if( false === argv.production )
         return styles_dev();
 
-    return gulp.src('./assets/scss/style.scss')
+    return gulp.src('./assets/scss/styles.scss')
                 .pipe(plumber(plumberErrorHandler))
                 .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
                 .pipe(autoprefixer())
