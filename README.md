@@ -5,4 +5,5 @@ A custom WordPress plugin used to populate and render the "What Am I Listening T
 ## Local Development
 
 npm install - Install dependencies
+
 npm start - Run gulp watch
