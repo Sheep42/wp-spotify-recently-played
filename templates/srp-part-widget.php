@@ -30,6 +30,10 @@ if( !defined( 'ABSPATH' ) )
 
 		</div><!-- ./recent-list -->
 
+		<p class="powered-by">
+			Powered by <a href="https://developer.spotify.com/documentation/web-api/" target="_blank">Spotify</a>
+		</p>
+
 	</div>
 
 </div>
