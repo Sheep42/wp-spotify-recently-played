@@ -1,0 +1,33 @@
+#ds-spotify-recently-played {
+
+	.track {
+
+		padding-bottom:15px;
+		margin-bottom: 15px;
+		border-bottom: 1px dotted #999;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		.track-name {
+
+		}
+
+		.artist-name, 
+		.album-name {
+			display: inline-block;
+			font-size: 14px;
+			line-height: 17px;
+		}
+
+		.played-at {
+			font-size: 14px;
+			line-height: 17px;
+			font-style: italic;
+			opacity: 0.8;
+		}
+
+	}
+
+}

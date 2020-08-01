@@ -1,0 +1,41 @@
+#ds-spotify-recently-played-container {
+	
+	position: fixed;
+	right: 0;
+	bottom: -9999px;
+	width: 60%;
+
+	@media only screen and(min-width: 600px) {
+		width: 30%;
+	}
+
+	#ds-spotify-recently-played {
+		width: 100%;
+		padding: 20px 20px;
+		max-height: 80%;
+		overflow: auto;
+		background: #222;
+		box-sizing: border-box;
+	}
+
+	h4 {
+
+		font-size: 18px;
+		line-height: 22px;
+
+	}
+
+}
+
+#ds-spotify-recently-played-toggle {
+	float: right;
+	background: #222;
+	border: 1px solid #111;
+	    border-bottom-color: rgb(17, 17, 17);
+	    border-bottom-style: solid;
+	    border-bottom-width: 1px;
+	border-bottom: none;
+	border-radius: 5px 5px 0px 0px;
+	color: #fff;
+	padding: 8px 20px;
+}
