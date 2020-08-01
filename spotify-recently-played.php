@@ -45,31 +45,35 @@ class DS_SpotifyRecentlyPlayed {
 
         $this->settings = ( get_option('srp_options') ) ? get_option( 'srp_options' ) : array();
 
-        $this->session = new Session(
-            $this->settings['srp_client_id'],
-            $this->settings['srp_client_secret'],
-            admin_url( '/' ) . 'admin.php?page=spotify-recently-played'
-        );
+        if( $this->has_client_id_and_secret() ) {
+
+            $this->session = new Session(
+                $this->settings['srp_client_id'],
+                $this->settings['srp_client_secret'],
+                admin_url( '/' ) . 'admin.php?page=spotify-recently-played'
+            );
 
 
-        if( !empty( $this->settings['srp_access_token'] ) ) {
-    
-            $this->session->setAccessToken( $this->settings['srp_access_token'] );
-            $this->session->setRefreshToken( $this->settings['srp_refresh_token'] );
+            if( !empty( $this->settings['srp_access_token'] ) ) {
+        
+                $this->session->setAccessToken( $this->settings['srp_access_token'] );
+                $this->session->setRefreshToken( $this->settings['srp_refresh_token'] );
 
-            $options = [
-                'auto_refresh' => true,
-            ];
+                $options = [
+                    'auto_refresh' => true,
+                ];
 
-            $this->client = new SpotifyWebAPI( $options, $this->session );
-            $this->client->setSession( $this->session );
+                $this->client = new SpotifyWebAPI( $options, $this->session );
+                $this->client->setSession( $this->session );
 
-            if( $this->session->getAccessToken() !== $this->settings['srp_access_token'] ) {
+                if( $this->session->getAccessToken() !== $this->settings['srp_access_token'] ) {
 
-                $this->settings['srp_access_token'] = $this->session->getAccessToken();
-                $this->settings['srp_refresh_token'] = $this->session->getRefreshToken();
+                    $this->settings['srp_access_token'] = $this->session->getAccessToken();
+                    $this->settings['srp_refresh_token'] = $this->session->getRefreshToken();
 
-                update_option( 'srp_options', $this->settings );
+                    update_option( 'srp_options', $this->settings );
+
+                }
 
             }
 
@@ -289,7 +293,21 @@ class DS_SpotifyRecentlyPlayed {
 
         check_ajax_referer( 'srp-get-track-info-nonce', '__srp_nonce' );
 
+        if( !$this->has_client_id_and_secret() ) {
+            wp_send_json_error( array( 'message' => 'Spotify client id or secret is not set' ) );
+        }
 
+        if( empty( $this->settings['srp_access_token'] ) ) {
+            wp_send_json_error( array( 'message' => 'No Spotify access token' ) );  
+        }
+
+        if( empty( $this->session ) || empty( $this->client ) ) {
+            wp_send_json_error( array( 'message' => 'Could not set up Spotify API access' ) );
+        }
+
+        $response = $this->client->me();
+
+        wp_send_json_success( wp_json_encode( $response ) );
 
     }
 

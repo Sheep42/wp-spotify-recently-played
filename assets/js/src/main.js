@@ -19,8 +19,9 @@
 
 			let _this = $(this);
 			let scroll_bottom = $window.height() + $window.scrollTop();
+			let footer_top = $footer.offset().top;
 
-			let elem_offset = ( scroll_bottom >= $footer.offset().top ) ? scroll_bottom - $footer.offset().top - 1 : 0;
+			let elem_offset = ( scroll_bottom >= footer_top ) ? scroll_bottom - footer_top - 1 : 0;
 
 			if( $container.hasClass( 'expanded' ) ) {
 
@@ -42,13 +43,44 @@
 
 		});
 
+		let try_get_spotify_data = function() {
+
+			let __srp_nonce = ajax_object.srp_get_track_info_nonce;
+			let action = 'get_spotify_track_info';
+
+			let post_data = {
+				__srp_nonce,
+				action
+			};
+
+			$.post(
+				ajax_object.ajax_url,
+				post_data,
+				function( response ) {
+
+					if( false === response.success ) { 
+						console.error( response.data.message );
+						clearInterval( try_get_loop );
+					}
+
+					console.log( response.data );
+
+				}
+			)
+
+		};
+
+		let try_get_loop = setInterval( try_get_spotify_data, 5000 );
+		try_get_spotify_data();
+
 	});
 
 	$window.on( 'scroll', function( e ) {
 
 		let scroll_bottom = $window.height() + $window.scrollTop();
+		let footer_top = $footer.offset().top
 		
-		let elem_offset = ( scroll_bottom >= $footer.offset().top ) ? scroll_bottom - $footer.offset().top - 1 : 0;
+		let elem_offset = ( scroll_bottom >= footer_top ) ? scroll_bottom - footer_top - 1 : 0;
 
 		if( !$container.hasClass( 'expanded' ) ) {
 			elem_offset -= $widget.outerHeight();
