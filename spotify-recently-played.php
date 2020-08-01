@@ -75,10 +75,13 @@ class DS_SpotifyRecentlyPlayed {
 
         }
 
-        add_action('admin_menu', array(&$this, 'srp_admin_menu'));
-        add_action('init', array(&$this, 'srp_init'));
-        add_action('admin_init', array(&$this, 'srp_admin_init'));
+        add_action( 'admin_menu', array( &$this, 'srp_admin_menu' ) );
+        add_action( 'admin_init', array( &$this, 'srp_admin_init' ) );
+        add_action( 'wp_enqueue_scripts', array( &$this, 'srp_enqueue_scripts' ) );
         add_action( 'load-toplevel_page_spotify-recently-played', array( &$this, 'srp_load_settings_page' ) );
+
+        add_action( 'wp_ajax_get_spotify_track_info', array( &$this, 'srp_get_spotify_track_info' ) );
+        add_action( 'wp_ajax_nopriv_get_spotify_track_info', array( &$this, 'srp_get_spotify_track_info' ) ); 
 
 	}
 
@@ -119,10 +122,6 @@ class DS_SpotifyRecentlyPlayed {
 			return;
 
 		  include SRP_PLUGIN_DIR . '/templates/srp-admin-settings.php';
-
-	}
-
-	public function srp_init() {
 
 	}
 
@@ -211,6 +210,29 @@ class DS_SpotifyRecentlyPlayed {
 
     }
 
+    public function srp_enqueue_scripts() {
+
+        wp_enqueue_style(
+            'srp-styles', 
+            plugins_url( '/assets/css/styles.css', SRP_PLUGIN ),
+            array(), 
+            filemtime( plugin_dir_path(__FILE__) . '/assets/css/styles.css' )
+        );
+
+        wp_enqueue_script(
+            'srp-scripts', 
+            plugins_url( '/assets/js/build/main.min.js', SRP_PLUGIN ), 
+            array( 'jquery' ),
+            filemtime( plugin_dir_path(__FILE__) . '/assets/js/build/main.min.js' )
+        );
+
+        wp_localize_script( 'srp-scripts', 'ajax_object', array(
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'srp_get_track_info_nonce' => wp_create_nonce( 'srp-get-track-info-nonce' )
+        ));
+
+    }
+
     public function srp_load_settings_page() {
 
         if( empty( $_GET['page'] ) )
@@ -263,6 +285,14 @@ class DS_SpotifyRecentlyPlayed {
 
     }
 
+    public function srp_get_spotify_track_info() {
+
+        check_ajax_referer( 'srp-get-track-info-nonce', '__srp_nonce' );
+
+
+
+    }
+
 	public static function get_instance() {
 
 		if( null !== self::$instance )
@@ -275,5 +305,15 @@ class DS_SpotifyRecentlyPlayed {
 }
 
 $SpotifyRecentlyPlayed = DS_SpotifyRecentlyPlayed::get_instance();
+
+if( !function_exists( 'ds_spotify_recently_played' ) ) {
+
+    function ds_spotify_recently_played() {
+
+        include SRP_PLUGIN_DIR . '/templates/srp-part-widget.php';
+
+    }
+
+}
 
 endif;
