@@ -15,34 +15,19 @@ if( !defined( 'ABSPATH' ) )
 			<h4>Currently Playing</h4>
 			
 			<div class="track">
-				<div class="track-name">Track 1</div>
-				<div class="artist-name">purpan</div>
-				<div class="album-name">Album</div>
+				Loading...
 			</div>
 		</div><!-- ./current-track -->
 
-		<div class="recent-list">
+		<div class="recently-playe">
 			<h4>Recently Played</h4>
 
-			<ul>
+			<ul class="track-list">
 				<li class="track">
-					<div class="track-name">Track 1</div>
-					<div class="artist-name">By: <a href="">purpan</a></div> - <div class="album-name"><a href="">Album</a></div>
-					<div class="played-at">20 minutes ago</div>
-				</li>
-
-				<li class="track">
-					<div class="track-name">Track 1</div>
-					<div class="artist-name">By: purpan</div> - <div class="album-name">Album</div>
-					<div class="played-at">20 minutes ago</div>
-				</li>
-
-				<li class="track">
-					<div class="track-name">Track 1</div>
-					<div class="artist-name">By: purpan</div> - <div class="album-name">Album</div>
-					<div class="played-at">20 minutes ago</div>
+					<p>Loading...</p>
 				</li>
 			</ul>
+
 		</div><!-- ./recent-list -->
 
 	</div>

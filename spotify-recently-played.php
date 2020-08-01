@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Spotify Recently Played
  * Description: Displays Spotify Currently playing & recently played data on your WordPress website
- * 
+ * Version: 1.0
  * Author: Dan Shedd
  * Author URI: https://dshedd.com/
  */
@@ -44,6 +44,13 @@ class DS_SpotifyRecentlyPlayed {
         );
 
         $this->settings = ( get_option('srp_options') ) ? get_option( 'srp_options' ) : array();
+
+        if( empty( $this->settings['srp_track_limit'] ) ) {
+            
+            $this->settings['srp_track_limit'] = 4;
+            update_option( 'srp_options', $this->settings );
+
+        }
 
         if( $this->has_client_id_and_secret() ) {
 
@@ -111,6 +118,17 @@ class DS_SpotifyRecentlyPlayed {
     }
 
 	public function srp_validate_input( $input ) {
+
+        foreach( $input as $key => $val ) {
+            
+            if( 'srp_track_limit' == $key ) {
+                $input[$key] = $val == intval( $val ) ? intval( abs( $val ) ) : 4;
+            }
+
+            $input[$key] = sanitize_text_field( $val );
+
+        }
+
 		return $input;
 	}
 
@@ -163,6 +181,18 @@ class DS_SpotifyRecentlyPlayed {
         );
 
         add_settings_field(
+            'srp_track_limit',
+            'Track Limit',
+            array(&$this, 'srp_track_limit_field'),
+            'spotify-recently-played',
+            'srp_settings_section',
+            [
+                'label_for' => 'srp_track_limit',
+                'class' => 'srp_row'
+            ]
+        );
+
+        add_settings_field(
             'srp_access_token',
             'Access Token',
             array(&$this, 'srp_access_token_field'),
@@ -201,6 +231,12 @@ class DS_SpotifyRecentlyPlayed {
 		include SRP_PLUGIN_DIR . '/templates/settings/settings-password.php';
 
 	}
+
+    public function srp_track_limit_field( $args ) {
+        
+        include SRP_PLUGIN_DIR . '/templates/settings/settings-text.php';
+
+    }
 
     public function srp_access_token_field( $args ) {
 
@@ -305,7 +341,8 @@ class DS_SpotifyRecentlyPlayed {
             wp_send_json_error( array( 'message' => 'Could not set up Spotify API access' ) );
         }
 
-        $response = $this->client->me();
+        $response['current_track'] = $this->client->getMyCurrentTrack();
+        $response['recent_tracks'] = $this->client->getMyRecentTracks( $this->settings['srp_track_limit'] );
 
         wp_send_json_success( wp_json_encode( $response ) );
 
