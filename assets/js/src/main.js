@@ -75,7 +75,7 @@
 					render_recently_played( json_response.recent_tracks );
 
 				}
-			)
+			);
 
 		};
 
@@ -84,12 +84,12 @@
 
 	});
 
-	$window.on( 'scroll', reposition_container );
+	$window.on( 'scroll resize', reposition_container );
 
 	function reposition_container() {
 
 		let scroll_bottom = $window.height() + $window.scrollTop();
-		let footer_top = $footer.offset().top
+		let footer_top = $footer.offset().top;
 		
 		let elem_offset = ( scroll_bottom >= footer_top ) ? scroll_bottom - footer_top - 1 : 0;
 
@@ -272,13 +272,13 @@
 	    var difference = date1.getTime() - date2.getTime();
 
 	    var daysDifference = Math.floor(difference/1000/60/60/24);
-	    difference -= daysDifference*1000*60*60*24
+	    difference -= daysDifference*1000*60*60*24;
 
 	    var hoursDifference = Math.floor(difference/1000/60/60);
-	    difference -= hoursDifference*1000*60*60
+	    difference -= hoursDifference*1000*60*60;
 
 	    var minutesDifference = Math.floor(difference/1000/60);
-	    difference -= minutesDifference*1000*60
+	    difference -= minutesDifference*1000*60;
 
 	    var secondsDifference = Math.floor(difference/1000);
 
@@ -287,7 +287,7 @@
 			hours: hoursDifference,
 			minutes: minutesDifference,
 			seconds: secondsDifference
-		}
+		};
 
 	}
 
