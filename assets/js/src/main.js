@@ -45,7 +45,7 @@
 
 		let try_get_spotify_data = function() {
 
-			let __srp_nonce = ajax_object.srp_get_track_info_nonce;
+			let __srp_nonce = srp_ajax_object.srp_get_track_info_nonce;
 			let action = 'get_spotify_track_info';
 
 			let post_data = {
@@ -54,7 +54,7 @@
 			};
 
 			$.post(
-				ajax_object.ajax_url,
+				srp_ajax_object.ajax_url,
 				post_data,
 				function( response ) {
 

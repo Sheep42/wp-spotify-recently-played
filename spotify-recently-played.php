@@ -266,7 +266,7 @@ class DS_SpotifyRecentlyPlayed {
             filemtime( plugin_dir_path(__FILE__) . '/assets/js/build/main.min.js' )
         );
 
-        wp_localize_script( 'srp-scripts', 'ajax_object', array(
+        wp_localize_script( 'srp-scripts', 'srp_ajax_object', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'srp_get_track_info_nonce' => wp_create_nonce( 'srp-get-track-info-nonce' )
         ));
