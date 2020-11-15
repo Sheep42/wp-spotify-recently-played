@@ -8,6 +8,9 @@
  * Author URI: https://dshedd.com/
  */
 
+if( !defined( 'ABSPATH' ) )
+    die( 'not permitted' );
+
 if( !defined( 'SRP_PLUGIN' ) )
     define( 'SRP_PLUGIN', __FILE__ );
 
