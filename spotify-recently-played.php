@@ -38,12 +38,12 @@ class DS_SpotifyRecentlyPlayed {
 
 		self::$instance = $this;
 
-		register_deactivation_hook( SRP_PLUGIN, array( &$this, 'srp_deactivation' ) );
+		register_deactivation_hook( SRP_PLUGIN, array( $this, 'srp_deactivation' ) );
 
         register_setting(
             'spotify-recently-played',
             'srp_options',
-            array(  &$this, 'srp_validate_input' ) 
+            array(  $this, 'srp_validate_input' ) 
         );
 
         $this->settings = ( get_option('srp_options') ) ? get_option( 'srp_options' ) : array();
@@ -89,21 +89,21 @@ class DS_SpotifyRecentlyPlayed {
 
         }
 
-        add_action( 'admin_menu', array( &$this, 'srp_admin_menu' ) );
-        add_action( 'admin_init', array( &$this, 'srp_admin_init' ) );
-        add_action( 'wp_enqueue_scripts', array( &$this, 'srp_enqueue_scripts' ) );
-        add_action( 'load-toplevel_page_spotify-recently-played', array( &$this, 'srp_load_settings_page' ) );
+        add_action( 'admin_menu', array( $this, 'srp_admin_menu' ) );
+        add_action( 'admin_init', array( $this, 'srp_admin_init' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'srp_enqueue_scripts' ) );
+        add_action( 'load-toplevel_page_spotify-recently-played', array( $this, 'srp_load_settings_page' ) );
 
-        add_action( 'wp_ajax_get_spotify_track_info', array( &$this, 'srp_get_spotify_track_info' ) );
-        add_action( 'wp_ajax_nopriv_get_spotify_track_info', array( &$this, 'srp_get_spotify_track_info' ) ); 
+        add_action( 'wp_ajax_get_spotify_track_info', array( $this, 'srp_get_spotify_track_info' ) );
+        add_action( 'wp_ajax_nopriv_get_spotify_track_info', array( $this, 'srp_get_spotify_track_info' ) ); 
 
 	}
 
-	public static function srp_deactivation() {
+	public function srp_deactivation() {
 
-        remove_action( 'admin_menu', array( &$this, 'srp_admin_menu' ) );
-        remove_action( 'init', array( &$this, 'srp_init' ) );
-        remove_action( 'admin_init', array( &$this, 'srp_admin_init' ) );
+        remove_action( 'admin_menu', array( $this, 'srp_admin_menu' ) );
+        remove_action( 'init', array( $this, 'srp_init' ) );
+        remove_action( 'admin_init', array( $this, 'srp_admin_init' ) );
 
         delete_option( 'srp_options' );
 
@@ -137,7 +137,7 @@ class DS_SpotifyRecentlyPlayed {
 
 	public function srp_admin_menu() {
 
-        add_menu_page('Settings - Spotify Recently Played', 'Spotify Recently Played', 'manage_options', 'spotify-recently-played', array(&$this, 'srp_render_settings'), 'dashicons-format-audio');
+        add_menu_page('Settings - Spotify Recently Played', 'Spotify Recently Played', 'manage_options', 'spotify-recently-played', array($this, 'srp_render_settings'), 'dashicons-format-audio');
 
 	}
 
@@ -155,14 +155,14 @@ class DS_SpotifyRecentlyPlayed {
         add_settings_section(
             'srp_settings_section',
             'Settings',
-            array(&$this, 'srp_settings_section'),
+            array($this, 'srp_settings_section'),
             'spotify-recently-played'
         );
 
         add_settings_field(
             'srp_client_id',
             'Client ID',
-            array(&$this, 'srp_client_id_field'),
+            array($this, 'srp_client_id_field'),
             'spotify-recently-played',
             'srp_settings_section',
             [
@@ -174,7 +174,7 @@ class DS_SpotifyRecentlyPlayed {
         add_settings_field(
             'srp_client_secret',
             'Client Secret',
-            array(&$this, 'srp_client_secret_field'),
+            array($this, 'srp_client_secret_field'),
             'spotify-recently-played',
             'srp_settings_section',
             [
@@ -186,7 +186,7 @@ class DS_SpotifyRecentlyPlayed {
         add_settings_field(
             'srp_track_limit',
             'Track Limit',
-            array(&$this, 'srp_track_limit_field'),
+            array($this, 'srp_track_limit_field'),
             'spotify-recently-played',
             'srp_settings_section',
             [
@@ -198,7 +198,7 @@ class DS_SpotifyRecentlyPlayed {
         add_settings_field(
             'srp_access_token',
             'Access Token',
-            array(&$this, 'srp_access_token_field'),
+            array($this, 'srp_access_token_field'),
             'spotify-recently-played',
             'srp_settings_section',
             [
@@ -209,7 +209,7 @@ class DS_SpotifyRecentlyPlayed {
         add_settings_field(
             'srp_refresh_token',
             'Refresh Token',
-            array(&$this, 'srp_refresh_token_field'),
+            array($this, 'srp_refresh_token_field'),
             'spotify-recently-played',
             'srp_settings_section',
             [
